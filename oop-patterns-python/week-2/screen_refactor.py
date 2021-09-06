@@ -41,9 +41,9 @@ class Polyline:
         points = []
         speeds = []
 
-    def add(self, (x, y), (speed_x, speed_y)):
+    def add(self, x, y):
         self.points.append(Vec2d(x, y))
-        self.speeds.append(Vec2d(speed_x, speed_y))
+        self.speeds.append(Vec2d(random.random() * 2, random.random() * 2))
 
     def set_points(self):
         """функция перерасчета координат опорных точек"""
@@ -109,7 +109,7 @@ class Knot(Polyline):
             res.append(self.__get_point__(base_points, i * alpha))
         return res
 
-    def get_knot(self, count):
+    def __get_knot__(self, count):
         if len(self.points) < 3:
             return []
         res = []
@@ -117,11 +117,18 @@ class Knot(Polyline):
             ptn = []
             ptn.append((points[i] + points[i + 1]) * 0.5)
             ptn.append(points[i + 1])
-            ptn.append((points[i + 1] + points[i + 2]) * 0.5))
+            ptn.append((points[i + 1] + points[i + 2]) * 0.5)
 
             res.extend(self.__get_points__(ptn, count))
         return res
 
+    def add(self, x, y, count):
+        super(self).add(x, y)
+        self.__get_knot__(count)
+
+    def set_points(self, count):
+        super(left).set_points()
+        self.__get_knot__(count)
 
 
 # =======================================================================================
@@ -134,7 +141,7 @@ if __name__ == "__main__":
 
     steps = 35
     working = True
-    polyline = Polyline()
+    knot = Knot()
     show_help = False
     pause = True
 
@@ -149,7 +156,7 @@ if __name__ == "__main__":
                 if event.key == pygame.K_ESCAPE:
                     working = False
                 if event.key == pygame.K_r:
-                    polyline = Polyline()
+                    knot = Knot()
                 if event.key == pygame.K_p:
                     pause = not pause
                 if event.key == pygame.K_KP_PLUS:
@@ -160,16 +167,15 @@ if __name__ == "__main__":
                     steps -= 1 if steps > 1 else 0
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                points.append(event.pos)
-                speeds.append((random.random() * 2, random.random() * 2))
+                knot.add(event.pos, steps)
 
         gameDisplay.fill((0, 0, 0))
         hue = (hue + 1) % 360
         color.hsla = (hue, 100, 50, 100)
-        draw_points(points)
-        draw_points(get_knot(points, steps), "line", 3, color)
+        knot.draw_points()
+        knot.draw_points("line", 3, color)
         if not pause:
-            set_points(points, speeds)
+            knot.set_points(steps)
         if show_help:
             draw_help()
 
