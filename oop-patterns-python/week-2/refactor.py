@@ -28,13 +28,18 @@ class Vec2d:
 
     def __mul__(self, k):
         """возвращает произведение вектора на число"""
-        return Vec2d(self.x * k, self.y * k)
+        return Vec2d((self.x * k, self.y * k))
 
     def int_pair(self):
+        """возвращает кортеж из двух целых чисел (текущие координаты вектора)"""
+        return (int(self.x), int(self.y))
+
+    def vec(self):
         """возвращает пару координат, определяющих вектор (координаты точки
         конца вектора), координаты начальной точки вектора совпадают с началом
         системы координат (0, 0)"""
-        return (int(self.x), int(self.y))
+        return (self.x, self.y)
+
 
     def __str__(self):
         return f"Vector(x:{self.x}, y:{self.y})"
@@ -56,8 +61,8 @@ class Polyline:
             # changing point coordinates
             self.points[p] = self.points[p] + self.speeds[p]
             # getting point and speed coordinates
-            (x, y) = self.points[p].int_pair()
-            (sx, sy) = self.speeds[p].int_pair()
+            (x, y) = self.points[p].vec()
+            (sx, sy) = self.speeds[p].vec()
             # checking if we out of bounds -> go back
             if x > SCREEN_DIM[0] or x < 0:
                 self.speeds[p] = Vec2d((-sx, sy))
