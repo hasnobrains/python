@@ -33,8 +33,10 @@ def mul(v, k):
 
 
 def vec(x, y):
-    """возвращает пару координат, определяющих вектор (координаты точки конца вектора),
-    координаты начальной точки вектора совпадают с началом системы координат (0, 0)"""
+    """возвращает пару координат, определяющих вектор (координаты точки конца
+    вектора),
+    координаты начальной точки вектора
+    совпадают с началом системы координат (0, 0)"""
     return sub(y, x)
 
 
@@ -47,7 +49,9 @@ def draw_points(points, style="points", width=3, color=(255, 255, 255)):
         for p_n in range(-1, len(points) - 1):
             pygame.draw.line(gameDisplay, color,
                              (int(points[p_n][0]), int(points[p_n][1])),
-                             (int(points[p_n + 1][0]), int(points[p_n + 1][1])), width)
+                             (int(points[p_n + 1][0]),
+                              int(points[p_n + 1][1])),
+                             width)
 
     elif style == "points":
         for p in points:
@@ -86,7 +90,8 @@ def get_point(points, alpha, deg=None):
         deg = len(points) - 1
     if deg == 0:
         return points[0]
-    return add(mul(points[deg], alpha), mul(get_point(points, alpha, deg - 1), 1 - alpha))
+    return add(mul(points[deg], alpha), mul(get_point(points, alpha, deg - 1),
+                                            1 - alpha))
 
 
 def get_points(base_points, count):
