@@ -31,7 +31,8 @@ class Vec2d:
         return Vec2d((self.x * k, self.y * k))
 
     def int_pair(self):
-        """возвращает кортеж из двух целых чисел (текущие координаты вектора)"""
+        """возвращает кортеж из двух целых чисел
+        (текущие координаты вектора)"""
         return (int(self.x), int(self.y))
 
     def vec(self):
@@ -39,7 +40,6 @@ class Vec2d:
         конца вектора), координаты начальной точки вектора совпадают с началом
         системы координат (0, 0)"""
         return (self.x, self.y)
-
 
     def __str__(self):
         return f"Vector(x:{self.x}, y:{self.y})"
@@ -51,19 +51,27 @@ class Polyline:
         self.points = []
         self.speeds = []
 
-    def add(self, point):
+    def add_or_delete(self, point):
+        """ Adding new point to list. If new point near than 10 pixels from
+        existing point we think we want to delete it"""
+        for p in self.points:
+            (x, y) = p.vec()
+            if abs(x - point[0]) <= 10 and abs(y - point[1]) <= 10:
+                print(f"New point {point} near {p} -> removing")
+                self.points.remove(p)
+                return
         self.points.append(Vec2d((point[0], point[1])))
-        self.speeds.append(Vec2d((random.random() * 2, random.random() * 2)))
+        self.speeds.append(Vec2d((random.random(), random.random())))
 
-    def set_points(self):
+    def set_points(self, speed):
         """функция перерасчета координат опорных точек"""
         for p in range(len(self.points)):
             # changing point coordinates
-            self.points[p] = self.points[p] + self.speeds[p]
+            self.points[p] = self.points[p] + self.speeds[p] * speed
             # getting point and speed coordinates
             (x, y) = self.points[p].vec()
             (sx, sy) = self.speeds[p].vec()
-            # checking if we out of bounds -> go back
+            # if we out of bounds -> go back
             if x > SCREEN_DIM[0] or x < 0:
                 self.speeds[p] = Vec2d((-sx, sy))
             if y > SCREEN_DIM[1] or y < 0:
@@ -98,9 +106,9 @@ class Knot(Polyline):
         return res
 
     def __get_knot__(self):
+        self.line_points = []
         if len(self.points) < 3:
             return
-        self.line_points = []
         for i in range(-2, len(self.points) - 2):
             ptn = []
             ptn.append((self.points[i] + self.points[i + 1]) * 0.5)
@@ -109,12 +117,12 @@ class Knot(Polyline):
 
             self.line_points.extend(self.__get_points__(ptn))
 
-    def add(self, point):
-        super().add(point)
+    def add_or_delete(self, point):
+        super().add_or_delete(point)
         self.__get_knot__()
 
-    def set_points(self):
-        super().set_points()
+    def set_points(self, speed):
+        super().set_points(speed)
         self.__get_knot__()
 
     def draw_line(self, width=3, color=(255, 255, 255)):
@@ -137,6 +145,10 @@ def draw_help():
     data.append(["P", "Pause/Play"])
     data.append(["Num+", "More points"])
     data.append(["Num-", "Less points"])
+    data.append([",", "Decreasing speed"])
+    data.append([".", "Increasing speed"])
+    data.append(["u", "Switch to next line"])
+    data.append(["j", "Switch to previous line"])
     data.append(["", ""])
     data.append([str(steps), "Current points"])
 
@@ -159,7 +171,8 @@ if __name__ == "__main__":
     knot = Knot(steps)
     show_help = False
     pause = True
-
+    knot_id = 0
+    knot_speed = {knot_id: 1}
     hue = 0
     color = pygame.Color(0)
 
@@ -174,15 +187,25 @@ if __name__ == "__main__":
                     knot = Knot(steps)
                 if event.key == pygame.K_p:
                     pause = not pause
+                if event.key == pygame.K_u:
+                    knot_id += 1
+                    if knot_id not in knot_speed:
+                        knot_speed[knot_id] = 1
+                if event.key == pygame.K_p:
+                    knot_id -= 1 if knot_id > 1 else 0
                 if event.key == pygame.K_KP_PLUS:
                     steps += 1
                 if event.key == pygame.K_F1:
                     show_help = not show_help
                 if event.key == pygame.K_KP_MINUS:
                     steps -= 1 if steps > 1 else 0
-
+                if event.key == pygame.K_PERIOD:
+                    knot_speed[knot_id] += 1
+                if event.key == pygame.K_COMMA:
+                    knot_speed[knot_id] -= 1
+                    # if speed < 0 -> points goes in oposit direction
             if event.type == pygame.MOUSEBUTTONDOWN:
-                knot.add(event.pos)
+                knot.add_or_delete(event.pos)
 
         gameDisplay.fill((0, 0, 0))
         hue = (hue + 1) % 360
@@ -192,7 +215,7 @@ if __name__ == "__main__":
         knot.draw_line(3, color)
 
         if not pause:
-            knot.set_points()
+            knot.set_points(knot_speed[knot_id])
         if show_help:
             draw_help()
 
