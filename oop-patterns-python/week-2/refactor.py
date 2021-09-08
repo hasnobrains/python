@@ -51,36 +51,47 @@ class Polyline:
         self.points = []
         self.speeds = []
 
-    def add_or_delete(self, point):
+    def add_or_delete(self, point, id):
         """ Adding new point to list. If new point near than 10 pixels from
         existing point we think we want to delete it"""
-        for p in self.points:
-            (x, y) = p.vec()
-            if abs(x - point[0]) <= 10 and abs(y - point[1]) <= 10:
-                print(f"New point {point} near {p} -> removing")
-                self.points.remove(p)
-                return
-        self.points.append(Vec2d((point[0], point[1])))
-        self.speeds.append(Vec2d((random.random(), random.random())))
+        if id < len(self.points):
+            points = self.points[id]
+            speeds = self.speeds[id]
+            for p in points:
+                (x, y) = p.vec()
+                if abs(x - point[0]) <= 10 and abs(y - point[1]) <= 10:
+                    print(f"New point {point} near {p} -> removing")
+                    points.remove(p)
+                    return
+            points.append(Vec2d((point[0], point[1])))
+            speeds.append(Vec2d((random.random(), random.random())))
+        else:
+            self.points.append([Vec2d((point[0], point[1]))])
+            self.speeds.append([Vec2d((random.random(), random.random()))])
 
-    def set_points(self, speed):
+    def set_points(self, knots_speeds):
         """функция перерасчета координат опорных точек"""
-        for p in range(len(self.points)):
-            # changing point coordinates
-            self.points[p] = self.points[p] + self.speeds[p] * speed
-            # getting point and speed coordinates
-            (x, y) = self.points[p].vec()
-            (sx, sy) = self.speeds[p].vec()
-            # if we out of bounds -> go back
-            if x > SCREEN_DIM[0] or x < 0:
-                self.speeds[p] = Vec2d((-sx, sy))
-            if y > SCREEN_DIM[1] or y < 0:
-                self.speeds[p] = Vec2d((sx, -sy))
+        for i, speed in knots_speeds.items():
+            if i < len(self.points):
+                points = self.points[i]
+                speeds = self.speeds[i]
+                for p in range(len(points)):
+                    # changing point coordinates
+                    points[p] = points[p] + speeds[p] * speed
+                    # getting point and speed coordinates
+                    (x, y) = points[p].vec()
+                    (sx, sy) = speeds[p].vec()
+                    # if we out of bounds -> go back
+                    if x > SCREEN_DIM[0] or x < 0:
+                        speeds[p] = Vec2d((-sx, sy))
+                    if y > SCREEN_DIM[1] or y < 0:
+                        speeds[p] = Vec2d((sx, -sy))
 
     def draw_points(self, width=3, color=(255, 255, 255)):
         """функция отрисовки точек на экране"""
-        for p in self.points:
-            pygame.draw.circle(gameDisplay, color, p.int_pair(), width)
+        for points in self.points:
+            for p in points:
+                pygame.draw.circle(gameDisplay, color, p.int_pair(), width)
 
 
 class Knot(Polyline):
@@ -107,31 +118,35 @@ class Knot(Polyline):
 
     def __get_knot__(self):
         self.line_points = []
-        if len(self.points) < 3:
-            return
-        for i in range(-2, len(self.points) - 2):
-            ptn = []
-            ptn.append((self.points[i] + self.points[i + 1]) * 0.5)
-            ptn.append(self.points[i + 1])
-            ptn.append((self.points[i + 1] + self.points[i + 2]) * 0.5)
+        for points in self.points:
+            line_points = []
+            if len(points) < 3:
+                return
+            for i in range(-2, len(points) - 2):
+                ptn = []
+                ptn.append((points[i] + points[i + 1]) * 0.5)
+                ptn.append(points[i + 1])
+                ptn.append((points[i + 1] + points[i + 2]) * 0.5)
 
-            self.line_points.extend(self.__get_points__(ptn))
+                line_points.extend(self.__get_points__(ptn))
+            self.line_points.append(line_points)
 
-    def add_or_delete(self, point):
-        super().add_or_delete(point)
+    def add_or_delete(self, point, id):
+        super().add_or_delete(point, id)
         self.__get_knot__()
 
-    def set_points(self, speed):
-        super().set_points(speed)
+    def set_points(self, knots_speeds):
+        super().set_points(knots_speeds)
         self.__get_knot__()
 
     def draw_line(self, width=3, color=(255, 255, 255)):
-        for p_n in range(-1, len(self.line_points) - 1):
-            pygame.draw.line(gameDisplay,
-                             color,
-                             self.line_points[p_n].int_pair(),
-                             self.line_points[p_n + 1].int_pair(),
-                             width)
+        for line_points in self.line_points:
+            for p_n in range(-1, len(line_points) - 1):
+                pygame.draw.line(gameDisplay,
+                                 color,
+                                 line_points[p_n].int_pair(),
+                                 line_points[p_n + 1].int_pair(),
+                                 width)
 
 
 def draw_help():
@@ -172,7 +187,7 @@ if __name__ == "__main__":
     show_help = False
     pause = True
     knot_id = 0
-    knot_speed = {knot_id: 1}
+    knots_speeds = {knot_id: 1}
     hue = 0
     color = pygame.Color(0)
 
@@ -189,10 +204,10 @@ if __name__ == "__main__":
                     pause = not pause
                 if event.key == pygame.K_u:
                     knot_id += 1
-                    if knot_id not in knot_speed:
-                        knot_speed[knot_id] = 1
-                if event.key == pygame.K_p:
-                    knot_id -= 1 if knot_id > 1 else 0
+                    if knot_id not in knots_speeds:
+                        knots_speeds[knot_id] = 1
+                if event.key == pygame.K_j:
+                    knot_id -= 1 if knot_id > 0 else 0
                 if event.key == pygame.K_KP_PLUS:
                     steps += 1
                 if event.key == pygame.K_F1:
@@ -200,12 +215,12 @@ if __name__ == "__main__":
                 if event.key == pygame.K_KP_MINUS:
                     steps -= 1 if steps > 1 else 0
                 if event.key == pygame.K_PERIOD:
-                    knot_speed[knot_id] += 1
+                    knots_speeds[knot_id] += 1
                 if event.key == pygame.K_COMMA:
-                    knot_speed[knot_id] -= 1
+                    knots_speeds[knot_id] -= 1
                     # if speed < 0 -> points goes in oposit direction
             if event.type == pygame.MOUSEBUTTONDOWN:
-                knot.add_or_delete(event.pos)
+                knot.add_or_delete(event.pos, knot_id)
 
         gameDisplay.fill((0, 0, 0))
         hue = (hue + 1) % 360
@@ -215,7 +230,7 @@ if __name__ == "__main__":
         knot.draw_line(3, color)
 
         if not pause:
-            knot.set_points(knot_speed[knot_id])
+            knot.set_points(knots_speeds)
         if show_help:
             draw_help()
 
