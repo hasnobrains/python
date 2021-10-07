@@ -1,0 +1,61 @@
+{
+   "events":[
+      {
+         "id":1,
+         "type":"sport",
+         "source":"газета спорт",
+         "date":"06.10.2021",
+         "title":"новое событие в мире спорта",
+         "text":"завтра пройдут соревнования по волейболу",
+         "special":false,
+         "address":{
+
+         },
+         "coordinates":{
+            "x":49,
+            "y":82
+         },
+         "importance":1,
+         "links":[
+            2
+         ]
+      },
+      {
+         "id":2,
+         "type":"sport",
+         "source":"газета спорт",
+         "date":"07.10.2021",
+         "title":"соревнования по волейболу",
+         "text":"сегодня прошли соревнования по волейболу",
+         "special":false,
+         "address":{
+            "region":"Красноярский край",
+            "city":"Красноярск"
+         },
+         "coordinates":{
+
+         },
+         "importance":1,
+         "links":[
+            1
+         ]
+      },
+      {
+         "id":3,
+         "type":"hr/resume",
+         "source":"hr.ru",
+         "date":"07.10.2021",
+         "title":"разработчик java",
+         "text":"я разработчик java, хочу работать в Сбере",
+         "special":true,
+         "address":{
+            "region":"Магаданская область",
+            "city":"Магадан"
+         },
+         "importance":1,
+         "links":[
+
+         ]
+      }
+   ]
+}
