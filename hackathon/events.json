@@ -56,6 +56,125 @@
          "links":[
 
          ]
+      },
+	  {
+         "id":4,
+         "type":"cinema",
+         "source":"karofilm.ru",
+         "date":"06.10.2021",
+         "title":"премьера фильма",
+         "text":"Премьера Empire-V в кино",
+         "special":true,
+         "address":{
+            "region":"Тверская область",
+            "city":"Тверь"
+         },
+         "importance":2,
+         "links":[
+
+         ]
+      },
+	  {
+         "id":5,
+         "type":"hr/resume",
+         "source":"hr.ru",
+         "date":"05.10.2021",
+         "title":"разработчик python",
+         "text":"я разработчик python, хочу работать в Сбере",
+         "special":true,
+         "address":{
+            "region":"Тюменская область",
+            "city":"Тобольск"
+         },
+         "importance":1,
+         "links":[
+
+         ]
+      },
+	  {
+         "id":6,
+         "type":"animals",
+         "source":"hr.ru",
+         "date":"06.10.2021",
+         "title":"Страусиные бега",
+         "text":"Страус сбежал из зоопарка",
+         "special":true,
+         "address":{
+            "region":"Владимирская область",
+            "city":"Киржач"
+         },
+         "importance":1,
+         "links":[
+
+         ]
+      },
+	  {
+         "id":7,
+         "type":"cinema",
+         "source":"kinoteatr.ru",
+         "date":"05.10.2021",
+         "title":"Ночной кинопоказ",
+         "text":"Ночной показ помидоры-убийцы ",
+         "special":true,
+         "address":{
+            "region":"Владимирская область",
+            "city":"Ковров"
+         },
+         "importance":1,
+         "links":[
+
+         ]
+      },
+	  {
+         "id":8,
+         "type":"animals",
+         "source":"vesti.ru",
+         "date":"04.10.2021",
+         "title":"Массовые смерти китов",
+         "text":"Киты выбрасываются на берег в Магадане",
+         "special":true,
+         "address":{
+            "region":"Магаданская область",
+            "city":"Магадан"
+         },
+         "importance":2,
+         "links":[
+
+         ]
+      },
+	  {
+         "id":9,
+         "type":"wonder",
+         "source":"газета Пушкинец",
+         "date":"04.10.2021",
+         "title":"Ничего",
+         "text":"В Пушкине снова ничего не произошло. Удивительно.",
+         "special":true,
+         "address":{
+            "region":"Ленинградская область",
+            "city":"Пушкин"
+         },
+         "importance":1,
+         "links":[
+
+         ]
+      },
+	  {
+         "id":10,
+         "type":"sport",
+         "source":"velobike.ru",
+         "date":"04.10.2021",
+         "title":"Велопробег",
+         "text":"Велопробег по центру Жиздры",
+         "special":true,
+         "address":{
+            "region":"Калужская область",
+            "city":"Жиздра"
+         },
+         "importance":1,
+         "links":[
+
+         ]
       }
    ]
 }
