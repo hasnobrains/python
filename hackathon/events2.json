@@ -71,7 +71,7 @@
          "special":true,
          "address":{
             "region":"Тверская область",
-            "city":"Тверь"
+            "place":"Тверь"
          },
          "importance":2,
          "links":[
@@ -88,7 +88,7 @@
          "special":true,
          "address":{
             "region":"Тюменская область",
-            "city":"Тобольск"
+            "place":"Тобольск"
          },
          "importance":1,
          "links":[
@@ -105,7 +105,7 @@
          "special":true,
          "address":{
             "region":"Владимирская область",
-            "city":"Киржач"
+            "place":"Киржач"
          },
          "importance":1,
          "links":[
@@ -122,7 +122,7 @@
          "special":true,
          "address":{
             "region":"Владимирская область",
-            "city":"Ковров"
+            "place":"Ковров"
          },
          "importance":1,
          "links":[
@@ -139,7 +139,7 @@
          "special":true,
          "address":{
             "region":"Магаданская область",
-            "city":"Магадан"
+            "place":"Магадан"
          },
          "importance":2,
          "links":[
@@ -156,7 +156,7 @@
          "special":true,
          "address":{
             "region":"Ленинградская область",
-            "city":"Пушкин"
+            "place":"Пушкин"
          },
          "importance":1,
          "links":[
@@ -173,7 +173,7 @@
          "special":true,
          "address":{
             "region":"Калужская область",
-            "city":"г. Жиздра",
+            "place":"г. Жиздра",
              "street":"Пушкина",
             "building":"7"
          },
@@ -181,6 +181,36 @@
          "links":[
 
          ]
+      },
+      {
+         "id":11,
+         "type":"sport",
+         "source":"velobike.ru",
+         "date":"04.10.2021",
+         "title":"Велопробег",
+         "text":"Велопробег по центру Жиздры",
+         "special":true,
+         "address":{
+         },
+         "importance":1,
+         "links":[
+
+         ]
+      },
+      {
+         "id":12,
+         "type":"sport",
+         "source":"velobike.ru",
+         "date":"04.10.2021",
+         "title":"Велопробег",
+         "text":"Велопробег по центру Жиздры",
+         "special":true,
+         "address":{
+         },
+         "importance":1,
+         "links":[
+
+         ]
       }
-   ]
+    ]
 }
